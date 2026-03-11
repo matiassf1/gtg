@@ -16,7 +16,7 @@ export function Logo({ size = "md", className }: LogoProps) {
   return (
     <div
       className={cn(
-        "flex items-center justify-center rounded-2xl border-2 border-primary font-black text-primary",
+        "flex items-center justify-center rounded-full border-2 border-primary font-black text-primary",
         "shadow-[0_0_20px_rgba(57,255,20,0.4)]",
         sizes[size],
         className
