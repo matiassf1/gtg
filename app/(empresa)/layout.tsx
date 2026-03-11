@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { Sidebar } from "@/components/empresa/sidebar";
+import { Header } from "@/components/empresa/header";
 
 export default async function EmpresaLayout({
   children,
@@ -13,9 +16,24 @@ export default async function EmpresaLayout({
     redirect("/login");
   }
 
+  const restaurant = await prisma.restaurant.findUnique({
+    where: { userId: session.user.id },
+    select: { name: true },
+  });
+
   return (
-    <div className="min-h-screen bg-background">
-      {children}
+    <div className="flex h-screen bg-background overflow-hidden">
+      <Sidebar />
+      <div className="flex flex-col flex-1 min-w-0">
+        <Header
+          restaurantName={restaurant?.name ?? "Mi Restaurante"}
+          userName={session.user.name ?? "Usuario"}
+          userImage={session.user.image}
+        />
+        <main className="flex-1 overflow-y-auto p-6">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
