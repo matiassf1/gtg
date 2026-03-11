@@ -94,10 +94,29 @@ model Restaurant {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  favoritedBy Client[]  @relation("ClientFavorites")
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  favoritedBy Client[]   @relation("ClientFavorites")
+  menuItems   MenuItem[]
 
   @@map("restaurants")
+}
+
+model MenuItem {
+  id           String   @id @default(cuid())
+  restaurantId String
+  name         String
+  description  String?  @db.Text
+  price        Float
+  image        String?
+  category     String
+  available    Boolean  @default(true)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@map("menu_items")
 }
 
 model Client {
