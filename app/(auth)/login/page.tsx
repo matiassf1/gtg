@@ -40,7 +40,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center gap-3 mb-8">
-          <Link href="/"><Logo size="md" /></Link>
+          <Link href="/"><Logo size="lg" /></Link>
           <div className="text-center">
             <h1 className="text-2xl font-bold text-foreground">Bienvenido</h1>
             <p className="text-sm text-muted-foreground mt-1">Iniciá sesión en tu cuenta</p>
