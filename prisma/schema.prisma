@@ -76,6 +76,14 @@ model VerificationToken {
 
 // ─── Negocio ─────────────────────────────────────────────────────────────────
 
+enum ReservationStatus {
+  PENDIENTE
+  CONFIRMADA
+  RECHAZADA
+  COMPLETADA
+  CANCELADA
+}
+
 model Restaurant {
   id            String   @id @default(cuid())
   userId        String   @unique
@@ -94,9 +102,10 @@ model Restaurant {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  favoritedBy Client[]   @relation("ClientFavorites")
-  menuItems   MenuItem[]
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  favoritedBy  Client[]      @relation("ClientFavorites")
+  menuItems    MenuItem[]
+  reservations Reservation[]
 
   @@map("restaurants")
 }
@@ -126,8 +135,27 @@ model Client {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  favorites Restaurant[] @relation("ClientFavorites")
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  favorites    Restaurant[]  @relation("ClientFavorites")
+  reservations Reservation[]
 
   @@map("clients")
+}
+
+model Reservation {
+  id           String            @id @default(cuid())
+  restaurantId String
+  clientId     String
+  date         DateTime
+  guests       Int
+  status       ReservationStatus @default(PENDIENTE)
+  notes        String?           @db.Text
+  rejectReason String?           @db.Text
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  client     Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("reservations")
 }

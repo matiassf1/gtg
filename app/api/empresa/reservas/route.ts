@@ -1,19 +1,22 @@
+import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { ReservasClient } from "@/components/empresa/reservas-client";
 
-export default async function ReservasPage() {
+export async function GET() {
   const session = await getServerSession(authOptions);
-  if (!session || session.user.role !== "EMPRESA") redirect("/login");
+  if (!session || session.user.role !== "EMPRESA") {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
 
   const restaurant = await prisma.restaurant.findUnique({
     where: { userId: session.user.id },
     select: { id: true },
   });
 
-  if (!restaurant) redirect("/empresa/dashboard");
+  if (!restaurant) {
+    return NextResponse.json({ error: "Restaurante no encontrado" }, { status: 404 });
+  }
 
   const reservations = await prisma.reservation.findMany({
     where: { restaurantId: restaurant.id },
@@ -27,13 +30,5 @@ export default async function ReservasPage() {
     orderBy: { date: "asc" },
   });
 
-  // Serialize dates to ISO strings for the client component
-  const serialized = reservations.map((r) => ({
-    ...r,
-    date: r.date.toISOString(),
-    createdAt: r.createdAt.toISOString(),
-    updatedAt: r.updatedAt.toISOString(),
-  }));
-
-  return <ReservasClient initialReservations={serialized} />;
+  return NextResponse.json(reservations);
 }
