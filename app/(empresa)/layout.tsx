@@ -30,7 +30,8 @@ export default async function EmpresaLayout({
           userName={session.user.name ?? "Usuario"}
           userImage={session.user.image}
         />
-        <main className="flex-1 overflow-y-auto p-6">
+        {/* pb-14 on mobile reserves space above the fixed bottom nav */}
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 pb-[calc(3.5rem+env(safe-area-inset-bottom))] md:pb-6">
           {children}
         </main>
       </div>

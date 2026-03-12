@@ -244,7 +244,7 @@ export function MisResenasClient({ initialReviews }: { initialReviews: Review[] 
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Buscar por restaurante o comentario..."
-                  className="w-full h-10 pl-9 pr-3 rounded-lg bg-card border border-input text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full h-11 pl-9 pr-3 rounded-lg bg-card border border-input text-base sm:text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
 
@@ -252,7 +252,7 @@ export function MisResenasClient({ initialReviews }: { initialReviews: Review[] 
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortKey)}
-                className="h-10 rounded-lg border border-input bg-card px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 shrink-0"
+                className="h-11 rounded-lg border border-input bg-card px-3 text-base sm:text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 shrink-0"
               >
                 {SORT_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>{o.label}</option>

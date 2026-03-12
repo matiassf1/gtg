@@ -30,12 +30,12 @@ export function Header({ restaurantName, userName, userImage }: HeaderProps) {
     .slice(0, 2);
 
   return (
-    <header className="h-16 border-b border-border bg-card flex items-center justify-between px-6 shrink-0">
+    <header className="h-14 md:h-16 border-b border-border bg-card flex items-center justify-between px-4 md:px-6 shrink-0">
 
       {/* Restaurant name */}
-      <div>
-        <h1 className="font-bold text-foreground truncate max-w-xs">{restaurantName}</h1>
-        <p className="text-xs text-muted-foreground">Panel de gestión</p>
+      <div className="min-w-0">
+        <h1 className="font-bold text-foreground truncate max-w-[160px] sm:max-w-xs text-sm md:text-base">{restaurantName}</h1>
+        <p className="text-xs text-muted-foreground hidden sm:block">Panel de gestión</p>
       </div>
 
       <div className="flex items-center gap-2">
@@ -46,7 +46,7 @@ export function Header({ restaurantName, userName, userImage }: HeaderProps) {
         {/* User menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="flex items-center gap-2 h-9 px-2">
+            <Button variant="ghost" className="flex items-center gap-2 h-11 px-2">
               <Avatar className="w-7 h-7">
                 <AvatarImage src={userImage ?? undefined} />
                 <AvatarFallback className="text-xs bg-primary/20 text-primary font-bold">

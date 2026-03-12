@@ -223,7 +223,7 @@ export function FavoritosClient({ initialFavorites }: { initialFavorites: FavRes
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Buscar en favoritos..."
-                  className="w-full h-10 pl-9 pr-3 rounded-lg bg-card border border-input text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full h-11 pl-9 pr-3 rounded-lg bg-card border border-input text-base sm:text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
             )}

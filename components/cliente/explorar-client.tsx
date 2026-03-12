@@ -186,7 +186,7 @@ function FilterPanel({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Nombre del restaurante..."
-            className="w-full h-9 pl-8 pr-3 rounded-lg bg-background border border-input text-sm
+            className="w-full h-11 pl-8 pr-3 rounded-lg bg-background border border-input text-base sm:text-sm
                        placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
           />
           {search && (
@@ -283,7 +283,7 @@ function FilterPanel({
         <select
           value={city}
           onChange={(e) => setCity(e.target.value)}
-          className="w-full h-9 rounded-lg border border-input bg-background px-3 text-sm
+          className="w-full h-11 rounded-lg border border-input bg-background px-3 text-base sm:text-sm
                      focus:outline-none focus:ring-2 focus:ring-primary/40 text-foreground"
         >
           <option value="">Todas las ciudades</option>
@@ -489,14 +489,14 @@ export function ExplorarClient({ restaurants, initialSearch }: Props) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar restaurantes..."
-              className="w-full h-9 pl-8 pr-3 rounded-lg bg-card border border-input text-sm
+              className="w-full h-11 pl-8 pr-3 rounded-lg bg-card border border-input text-base sm:text-sm
                          placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
             />
           </div>
           <button
             onClick={() => setDrawerOpen(true)}
             className={cn(
-              "flex items-center gap-1.5 h-9 px-3 rounded-lg border text-sm font-medium transition-colors shrink-0",
+              "flex items-center gap-1.5 h-11 px-3 rounded-lg border text-sm font-medium transition-colors shrink-0",
               hasFilters
                 ? "bg-primary text-primary-foreground border-primary"
                 : "bg-card border-border text-muted-foreground hover:text-foreground"

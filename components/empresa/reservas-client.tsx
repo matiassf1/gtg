@@ -360,13 +360,13 @@ export function ReservasClient({ initialReservations }: Props) {
             type="date"
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
-            className="h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            className="h-11 rounded-md border border-input bg-background px-3 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as ReservationStatus | "")}
-          className="h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+          className="h-11 rounded-md border border-input bg-background px-3 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-ring"
         >
           <option value="">Todos los estados</option>
           {(Object.keys(STATUS_LABEL) as ReservationStatus[]).map((s) => (
@@ -441,7 +441,7 @@ export function ReservasClient({ initialReservations }: Props) {
               onChange={(e) =>
                 setRejectDialog((prev) => ({ ...prev, reason: e.target.value }))
               }
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
             />
           </div>
           <DialogFooter className="gap-2">
