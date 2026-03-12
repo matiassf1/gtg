@@ -1,0 +1,366 @@
+================================================================
+  DÉCIMO PROMPT — Panel de Cliente: Layout + Explorar
+================================================================
+  Proyecto: GTG - Club Gastronómico (Next.js 14 + Prisma + NextAuth)
+  Fase 3: Panel de Cliente (Día 6-8)
+================================================================
+
+
+════════════════════════════════════════════════════════════════
+  OBJETIVO
+════════════════════════════════════════════════════════════════
+
+Construir la experiencia completa del cliente para descubrir
+restaurantes: navbar con buscador, página de exploración con
+tarjetas, filtros laterales y paginación.
+
+
+════════════════════════════════════════════════════════════════
+  1. SCHEMA PRISMA — Campo priceRange en Restaurant
+════════════════════════════════════════════════════════════════
+
+ARCHIVO: prisma/schema.prisma
+
+QUÉ SE HIZO:
+  Se agregó el campo `priceRange Int?` al modelo Restaurant.
+
+POR QUÉ:
+  Las tarjetas de restaurantes necesitan mostrar el rango de precio
+  (como $, $$, $$$, $$$$). Este dato no existía en la base de datos.
+  El campo es opcional (Int?) para no romper restaurantes ya creados
+  que no tienen este dato todavía.
+
+VALORES:
+  1 → $ (Económico)
+  2 → $$ (Moderado)
+  3 → $$$ (Elevado)
+  4 → $$$$ (Premium)
+
+COMANDO EJECUTADO:
+  npm run db:push → sincronizó el cambio con PostgreSQL/Neon
+  sin perder datos existentes.
+
+
+════════════════════════════════════════════════════════════════
+  2. NAVBAR — components/cliente/header.tsx (REESCRITO)
+════════════════════════════════════════════════════════════════
+
+ARCHIVO: components/cliente/header.tsx
+
+QUÉ SE HIZO:
+  Reescritura completa del header del panel cliente con todos los
+  elementos pedidos: logo, buscador, links de navegación y avatar.
+
+ESTRUCTURA DEL HEADER:
+  [Logo + "Club GTG"] [Buscador] [Nav links] [Avatar dropdown]
+
+DETALLES DE CADA SECCIÓN:
+
+  a) Logo (izquierda):
+     - Componente <Logo size="sm"> con el PNG real
+     - Texto "Club GTG" en verde, oculto en mobile (<md)
+     - Link a /cliente/explorar
+
+  b) Buscador (centro, desktop):
+     - Input con ícono de lupa integrado
+     - Forma rounded-full con fondo oscuro
+     - Al hacer Enter: navega a /cliente/explorar?q=término
+     - Usa useRouter para la navegación programática
+
+  c) Buscador (mobile — expandible):
+     - En mobile el buscador del centro está oculto
+     - En su lugar hay un ícono de lupa en la barra
+     - Al tocar el ícono, se despliega un input debajo del header
+     - Se enfoca automáticamente usando useRef + useEffect
+     - El ícono se convierte en X para cerrarlo
+
+  d) Navegación (desktop):
+     - Explorar (Search icon)
+     - Mis Reservas (CalendarDays icon)
+     - Beneficios (Gift icon)
+     - Favoritos (Heart icon)
+     - Link activo se resalta con bg-primary/10 text-primary
+     - En mobile estos links se ocultan (hidden md:block)
+
+  e) Avatar dropdown:
+     - Foto de perfil o iniciales como fallback
+     - Dropdown con: Mi perfil, Cerrar sesión
+     - En mobile, el dropdown TAMBIÉN incluye los 4 nav links
+       (para compensar que el navbar no los muestra en mobile)
+
+  f) Backdrop blur:
+     - El header usa bg-card/95 backdrop-blur para el efecto
+       de cristal cuando se hace scroll y hay contenido debajo
+
+
+════════════════════════════════════════════════════════════════
+  3. LAYOUT — app/(cliente)/layout.tsx (ACTUALIZADO)
+════════════════════════════════════════════════════════════════
+
+ARCHIVO: app/(cliente)/layout.tsx
+
+QUÉ SE HIZO:
+  Dos cambios pequeños pero importantes:
+
+  a) max-w-6xl → max-w-7xl (de 1152px a 1280px):
+     La página de explorar necesita más ancho para acomodar la
+     sidebar de filtros (240px) + el grid de restaurantes (3 col).
+     Con max-w-6xl el grid quedaba demasiado estrecho.
+
+  b) Eliminado py-6 del wrapper:
+     El padding vertical fijo causaba problemas en la página de
+     explorar, donde la sidebar necesita pegar al borde superior
+     para hacer sticky correctamente. Ahora cada página controla
+     su propio padding (la de explorar usa py-6 internamente).
+
+
+════════════════════════════════════════════════════════════════
+  4. COMPONENTE EXPLORAR — components/cliente/explorar-client.tsx
+════════════════════════════════════════════════════════════════
+
+ARCHIVO: components/cliente/explorar-client.tsx (NUEVO)
+
+Este es el componente principal y más complejo del prompt.
+Es un Client Component porque maneja estado de filtros en tiempo real.
+
+SUB-COMPONENTES:
+
+  a) Stars({ rating, count }):
+     Muestra 1-5 estrellas (amarillas/grises) + número de rating
+     + cantidad de reseñas entre paréntesis. Tamaño fijo xs.
+
+  b) RestCard({ r }):
+     Tarjeta de restaurante. Estructura:
+
+     IMAGEN (h=176px):
+       - Si el restaurante tiene fotos: muestra la primera con
+         next/image, zoom suave en hover (scale-105, duration-500)
+       - Si NO tiene fotos: muestra un gradiente oscuro con la
+         inicial del nombre en letra gigante translúcida.
+         El gradiente varía según el ID del restaurante (hash
+         determinista para consistencia entre renders)
+       - Badge "Promo" (verde, esquina superior derecha):
+         aparece si el restaurante tiene al menos una promoción
+         activa en este momento
+       - Pill de categoría (esquina inferior izquierda):
+         overlay negro semitransparente con el nombre de la categoría
+
+     BODY:
+       - Nombre del restaurante (bold, hover → color primary)
+       - Precio ($$) alineado a la derecha del nombre
+       - Estrellas + rating + cantidad de reseñas
+       - Ciudad con ícono MapPin
+
+     HOVER EFFECT:
+       - border-primary/30 (borde verde sutil)
+       - shadow-[0_0_20px_rgba(57,255,20,0.07)] (glow verde muy sutil)
+       - transition-all duration-300
+
+  c) FilterPanel (reutilizable en sidebar Y drawer):
+     Panel de filtros con 5 secciones:
+
+     1. BUSCAR: Input de texto que filtra por nombre y categoría.
+        Tiene botón X para limpiar solo ese campo.
+
+     2. CATEGORÍA: Pills multi-seleccionables. Se generan
+        dinámicamente con los valores únicos del array de
+        restaurantes recibido del servidor. Multi-select:
+        se puede seleccionar varias categorías a la vez.
+
+     3. RANGO DE PRECIO: Grid 4 columnas con botones $, $$, $$$, $$$$
+        Multi-select también. Tooltip con nombre del nivel al hacer hover.
+
+     4. VALORACIÓN MÍNIMA: 5 estrellas clickeables. Al hacer clic en
+        una estrella se establece como mínimo. Clic en la misma → reset.
+        Texto "o más" aparece cuando hay una seleccionada.
+
+     5. CIUDAD: Select con todas las ciudades únicas del dataset.
+        "Todas las ciudades" como opción por defecto.
+
+     6. BOTÓN LIMPIAR: Aparece solo cuando hasFilters === true.
+
+  d) Pagination:
+     Paginación numérica con elipsis para conjuntos grandes.
+     - Botones anterior/siguiente con iconos
+     - Páginas como botones numerados
+     - Elipsis (...) cuando hay muchas páginas entre grupos
+     - La página activa se resalta en verde
+     - Los botones disabled tienen opacity-30
+
+  e) ExplorarClient (componente raíz):
+     Maneja todo el estado y la lógica:
+
+     ESTADO:
+       - search: string (búsqueda por texto)
+       - categories: string[] (multi-select)
+       - prices: number[] (multi-select)
+       - minRating: number (0 = sin filtro)
+       - city: string (ciudad seleccionada)
+       - page: number (página actual)
+       - drawerOpen: boolean (drawer mobile abierto)
+
+     SINCRONIZACIÓN CON URL:
+       - useSearchParams lee ?q= al cargar
+       - useEffect observa cambios en searchParams para
+         sincronizar el estado interno con la URL
+       - El buscador del header navega a ?q=término y este
+         componente lo captura automáticamente
+
+     FILTRADO (useMemo):
+       - Combina todos los filtros activos
+       - La búsqueda por texto busca en nombre Y categoría
+       - Los filtros de categoría son OR dentro del grupo
+         (si seleccionás Parrilla + Italiana, muestra ambas)
+       - El precio filtra solo si el restaurante TIENE priceRange
+       - minRating filtra por averageRating >= valor
+
+     PAGINACIÓN:
+       - PAGE_SIZE = 12 tarjetas por página
+       - useEffect resetea a página 1 cuando cambia cualquier filtro
+       - El slice se hace sobre el array filtrado
+
+     LAYOUT DESKTOP:
+       [Sidebar 240px sticky] | [Gap 24px] | [Contenido principal]
+       La sidebar es sticky con top calculado para quedar debajo
+       del header (3.5rem) + el padding del layout (1.5rem).
+
+     LAYOUT MOBILE:
+       - La sidebar está oculta (hidden lg:block)
+       - Se muestra un botón "Filtros" que abre el drawer
+       - El botón muestra un contador de filtros activos cuando
+         hay alguno seleccionado (se pone verde)
+
+     FILTER DRAWER (mobile):
+       - Se renderiza con position:fixed bottom-0 full-width
+       - Backdrop negro semitransparente al hacer clic → cierra
+       - Panel con rounded-t-2xl que sube desde abajo
+       - max-h-[85vh] con overflow-y-auto para contenido largo
+       - Botón "Ver N resultados" al final para confirmar y cerrar
+       - Mismos FilterPanel que la sidebar desktop
+
+     RESULTS HEADER:
+       - Muestra "X restaurantes" (con el total filtrado)
+       - Texto "con esos filtros" aparece cuando hay filtros activos
+       - Link "Limpiar filtros" aparece al lado cuando hay filtros
+
+     ESTADO VACÍO:
+       - Ícono grande + mensaje + descripción contextual
+       - Si hay filtros activos: "Probá cambiando los filtros"
+       - Si no hay ningún restaurante: "Pronto habrá restaurantes"
+       - Botón "Quitar filtros" si aplica
+
+
+════════════════════════════════════════════════════════════════
+  5. PÁGINA EXPLORAR — app/(cliente)/cliente/explorar/page.tsx
+════════════════════════════════════════════════════════════════
+
+ARCHIVO: app/(cliente)/cliente/explorar/page.tsx (REESCRITO)
+
+QUÉ SE HIZO:
+  Reescritura completa como Server Component que hace el fetch
+  de datos y pasa todo al Client Component.
+
+QUERY A PRISMA:
+  Se usa select (no include) para solo traer los campos necesarios:
+    - id, name, category, city, address, photos, priceRange
+    - averageRating
+    - promotions filtradas: solo las active=true + dentro del
+      período validFrom/validUntil respecto a "now"
+    - _count de reviews (para mostrar cantidad de reseñas)
+
+  Ordenado por averageRating descendente (mejor primero).
+
+SERIALIZACIÓN:
+  Se mapea el resultado de Prisma a un array plano de RestaurantCard:
+    - hasActivePromo: booleano (promotions.length > 0)
+    - reviewCount: número (de _count.reviews)
+  Esto simplifica el tipo que recibe el Client Component.
+
+SEARCH PARAMS:
+  Lee searchParams.q para pasarlo como initialSearch al cliente.
+  Esto permite que la búsqueda desde el header del navbar funcione:
+  el header navega a ?q=valor, la página lo lee y lo pasa al
+  componente que inicializa su estado de búsqueda con ese valor.
+
+
+════════════════════════════════════════════════════════════════
+  6. PÁGINAS PLACEHOLDER — nuevas rutas del nav
+════════════════════════════════════════════════════════════════
+
+Se crearon páginas mínimas "Próximamente" para que los links del
+navbar no rompan con 404:
+
+  app/(cliente)/cliente/reservas/page.tsx   → /cliente/reservas
+  app/(cliente)/cliente/beneficios/page.tsx → /cliente/beneficios
+  app/(cliente)/cliente/favoritos/page.tsx  → /cliente/favoritos
+
+Estas páginas serán desarrolladas en prompts futuros.
+
+
+════════════════════════════════════════════════════════════════
+  7. FIX — next.config.mjs (imágenes externas)
+════════════════════════════════════════════════════════════════
+
+ARCHIVO: next.config.mjs
+
+PROBLEMA:
+  Next.js bloquea por seguridad las imágenes de dominios externos
+  no declarados. Al mostrar fotos de restaurantes que venían de
+  Unsplash, el componente <Image> de Next.js lanzó:
+  "hostname images.unsplash.com is not configured under images"
+
+SOLUCIÓN:
+  Se agregó "images.unsplash.com" a la lista de dominios permitidos
+  en la configuración de Next.js:
+
+  images: {
+    domains: [
+      "lh3.googleusercontent.com",    ← Google OAuth avatars
+      "avatars.githubusercontent.com", ← GitHub avatars
+      "images.unsplash.com",           ← ← NUEVO
+    ],
+  }
+
+NOTA:
+  Requirió reiniciar el servidor dev (npm run dev) porque los
+  cambios en next.config.mjs no se aplican con hot reload.
+
+
+════════════════════════════════════════════════════════════════
+  RESUMEN DE ARCHIVOS CREADOS/MODIFICADOS
+════════════════════════════════════════════════════════════════
+
+  MODIFICADOS:
+  ├── prisma/schema.prisma                           [+priceRange]
+  ├── components/cliente/header.tsx                  [REESCRITO]
+  ├── app/(cliente)/layout.tsx                       [max-w-7xl, sin py]
+  └── next.config.mjs                               [+images.unsplash.com]
+
+  NUEVOS:
+  ├── components/cliente/explorar-client.tsx         [NUEVO — principal]
+  ├── app/(cliente)/cliente/explorar/page.tsx        [REESCRITO]
+  ├── app/(cliente)/cliente/reservas/page.tsx        [NUEVO — placeholder]
+  ├── app/(cliente)/cliente/beneficios/page.tsx      [NUEVO — placeholder]
+  └── app/(cliente)/cliente/favoritos/page.tsx       [NUEVO — placeholder]
+
+  DB:
+  └── npm run db:push → columna price_range agregada en tabla restaurants
+
+
+════════════════════════════════════════════════════════════════
+  FLUJO COMPLETO DE UNA BÚSQUEDA
+════════════════════════════════════════════════════════════════
+
+  1. El cliente escribe en el buscador del header
+  2. Al hacer Enter → router.push('/cliente/explorar?q=parrilla')
+  3. El Server Component lee searchParams.q = "parrilla"
+  4. Fetcha todos los restaurantes de la DB con sus promos y ratings
+  5. Pasa initialSearch="parrilla" al ExplorarClient
+  6. ExplorarClient inicializa su estado search="parrilla"
+  7. useMemo filtra el array: solo restaurantes cuyo nombre o
+     categoría contenga "parrilla"
+  8. Se muestran las tarjetas filtradas con paginación
+  9. El usuario puede afinar con más filtros (precio, rating, ciudad)
+     todo en tiempo real sin más requests al servidor
+
+================================================================

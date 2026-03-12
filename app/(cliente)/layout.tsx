@@ -15,14 +15,14 @@ export default async function ClienteLayout({
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <ClienteHeader
         userName={session.user.name ?? "Usuario"}
         userImage={session.user.image}
       />
-      <main className="max-w-6xl mx-auto px-4 py-6">
+      <div className="flex-1 w-full max-w-7xl mx-auto px-4">
         {children}
-      </main>
+      </div>
     </div>
   );
 }

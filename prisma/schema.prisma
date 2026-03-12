@@ -101,6 +101,7 @@ model Restaurant {
   city          String
   phone         String?
   photos        String[]
+  priceRange    Int?
   latitude      Float?
   longitude     Float?
   openingHours  Json?
