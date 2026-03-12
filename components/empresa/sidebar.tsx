@@ -28,7 +28,7 @@ const NAV_ITEMS = [
   { href: "/empresa/promociones",   label: "Promos",       icon: Tag },
   { href: "/empresa/resenas",       label: "Reseñas",      icon: Star },
   { href: "/empresa/estadisticas",  label: "Estadísticas", icon: BarChart3 },
-  { href: "/empresa/configuracion", label: "Config",       icon: Settings },
+  { href: "/empresa/configuracion", label: "Configuración", icon: Settings },
 ];
 
 // 5 items in bottom bar, rest in "Más" drawer

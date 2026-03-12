@@ -111,14 +111,40 @@ model Restaurant {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
+  active        Boolean  @default(true)
+
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   favoritedBy  Client[]      @relation("ClientFavorites")
   menuItems    MenuItem[]
   reservations Reservation[]
   promotions   Promotion[]
   reviews      Review[]
+  config       RestaurantConfig?
 
   @@map("restaurants")
+}
+
+// ─── Configuración de reservas ────────────────────────────────────────────────
+
+model RestaurantConfig {
+  id                     String   @id @default(cuid())
+  restaurantId           String   @unique
+  maxCapacity            Int      @default(50)
+  maxReservationsPerSlot Int      @default(10)
+  reservationDuration    Int      @default(90)
+  autoConfirm            Boolean  @default(false)
+  minAdvance             Int      @default(2)
+  maxAdvance             Int      @default(30)
+  reservationSchedule    Json     @default("{}")
+  emailNewReservation    Boolean  @default(true)
+  emailNewReview         Boolean  @default(true)
+  emailDailySummary      Boolean  @default(false)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@map("restaurant_configs")
 }
 
 model MenuItem {
