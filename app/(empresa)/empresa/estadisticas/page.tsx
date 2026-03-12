@@ -1,8 +1,5 @@
-export default function Page() {
-  return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-foreground capitalize">estadisticas</h2>
-      <p className="text-muted-foreground">Proximamente</p>
-    </div>
-  );
+import { EstadisticasClient } from "@/components/empresa/estadisticas-client";
+
+export default function EstadisticasPage() {
+  return <EstadisticasClient />;
 }

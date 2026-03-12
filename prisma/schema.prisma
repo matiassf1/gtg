@@ -114,6 +114,7 @@ model Restaurant {
   menuItems    MenuItem[]
   reservations Reservation[]
   promotions   Promotion[]
+  reviews      Review[]
 
   @@map("restaurants")
 }
@@ -146,6 +147,7 @@ model Client {
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   favorites    Restaurant[]  @relation("ClientFavorites")
   reservations Reservation[]
+  reviews      Review[]
 
   @@map("clients")
 }
@@ -186,4 +188,20 @@ model Promotion {
   restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
   @@map("promotions")
+}
+
+model Review {
+  id           String   @id @default(cuid())
+  restaurantId String
+  clientId     String
+  rating       Int
+  comment      String?  @db.Text
+  response     String?  @db.Text
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  client     Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
 }
