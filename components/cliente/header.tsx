@@ -19,6 +19,7 @@ import {
   Search, Heart, User, LogOut, ChevronDown,
   CalendarDays, Gift, X,
 } from "lucide-react";
+import { NotificationBell } from "@/components/shared/notification-bell";
 
 const NAV_ITEMS = [
   { href: "/cliente/explorar",   label: "Explorar",     icon: Search      },
@@ -115,6 +116,9 @@ export function ClienteHeader({ userName, userImage }: ClienteHeaderProps) {
         >
           {searchOpen ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
         </button>
+
+        {/* Notification bell */}
+        <NotificationBell variant="cliente" />
 
         {/* Avatar dropdown */}
         <DropdownMenu>

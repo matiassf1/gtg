@@ -26,10 +26,11 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  accounts   Account[]
-  sessions   Session[]
-  restaurant Restaurant?
-  client     Client?
+  accounts      Account[]
+  sessions      Session[]
+  restaurant    Restaurant?
+  client        Client?
+  notifications Notification[]
 
   @@map("users")
 }
@@ -207,6 +208,32 @@ model Review {
   client     Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
   @@map("reviews")
+}
+
+// ─── Notificaciones ──────────────────────────────────────────────────────────
+
+enum NotificationType {
+  RESERVA_NUEVA
+  RESERVA_CONFIRMADA
+  RESERVA_RECHAZADA
+  NUEVA_RESENA
+  PROMOCION
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String           @db.Text
+  read      Boolean          @default(false)
+  data      Json?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+  @@map("notifications")
 }
 
 // ─── Beneficios ───────────────────────────────────────────────────────────────

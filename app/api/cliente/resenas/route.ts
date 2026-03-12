@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { createNotification } from "@/lib/notifications";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -79,6 +80,22 @@ export async function POST(req: Request) {
     where: { id: restaurantId },
     data: { averageRating: Math.round(avg * 10) / 10 },
   });
+
+  // Notify restaurant owner
+  const restaurant = await prisma.restaurant.findUnique({
+    where: { id: restaurantId },
+    select: { userId: true, name: true },
+  });
+  if (restaurant) {
+    const stars = "★".repeat(Number(rating)) + "☆".repeat(5 - Number(rating));
+    await createNotification({
+      userId: restaurant.userId,
+      type: "NUEVA_RESENA",
+      title: "Nueva reseña recibida",
+      message: `${session.user.name ?? "Un cliente"} dejó una reseña de ${stars} (${rating}/5)${review.comment ? `: "${review.comment.slice(0, 80)}${review.comment.length > 80 ? "…" : ""}"` : "."}`,
+      data: { reviewId: review.id, restaurantId, rating: Number(rating), clientName: session.user.name },
+    });
+  }
 
   return NextResponse.json({ ...review, createdAt: review.createdAt.toISOString(), updatedAt: review.updatedAt.toISOString() }, { status: 201 });
 }

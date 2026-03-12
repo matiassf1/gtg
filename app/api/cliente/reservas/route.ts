@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { createNotification } from "@/lib/notifications";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -52,6 +53,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "La fecha debe ser en el futuro" }, { status: 400 });
   }
 
+  const restaurant = await prisma.restaurant.findUnique({
+    where: { id: restaurantId },
+    select: { userId: true, name: true },
+  });
+
   const reservation = await prisma.reservation.create({
     data: {
       restaurantId,
@@ -62,6 +68,20 @@ export async function POST(req: Request) {
       status: "PENDIENTE",
     },
   });
+
+  // Notify restaurant owner
+  if (restaurant) {
+    const formattedDate = dateTime.toLocaleDateString("es-AR", {
+      weekday: "long", day: "numeric", month: "long",
+    });
+    await createNotification({
+      userId: restaurant.userId,
+      type: "RESERVA_NUEVA",
+      title: "Nueva reserva",
+      message: `${session.user.name ?? "Un cliente"} reservó para ${guests} persona${Number(guests) !== 1 ? "s" : ""} el ${formattedDate}`,
+      data: { reservationId: reservation.id, restaurantId, clientName: session.user.name },
+    });
+  }
 
   return NextResponse.json(reservation, { status: 201 });
 }
