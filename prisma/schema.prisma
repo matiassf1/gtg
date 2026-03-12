@@ -76,6 +76,13 @@ model VerificationToken {
 
 // ─── Negocio ─────────────────────────────────────────────────────────────────
 
+enum PromotionType {
+  DESCUENTO
+  DOS_X_UNO
+  MENU_ESPECIAL
+  OTRO
+}
+
 enum ReservationStatus {
   PENDIENTE
   CONFIRMADA
@@ -106,6 +113,7 @@ model Restaurant {
   favoritedBy  Client[]      @relation("ClientFavorites")
   menuItems    MenuItem[]
   reservations Reservation[]
+  promotions   Promotion[]
 
   @@map("restaurants")
 }
@@ -158,4 +166,24 @@ model Reservation {
   client     Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
   @@map("reservations")
+}
+
+model Promotion {
+  id              String        @id @default(cuid())
+  restaurantId    String
+  title           String
+  description     String?       @db.Text
+  type            PromotionType
+  discountPercent Float?
+  validFrom       DateTime
+  validUntil      DateTime
+  conditions      String?       @db.Text
+  active          Boolean       @default(true)
+  usageCount      Int           @default(0)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@map("promotions")
 }
