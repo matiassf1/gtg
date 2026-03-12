@@ -26,10 +26,11 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  accounts   Account[]
-  sessions   Session[]
-  restaurant Restaurant?
-  client     Client?
+  accounts      Account[]
+  sessions      Session[]
+  restaurant    Restaurant?
+  client        Client?
+  notifications Notification[]
 
   @@map("users")
 }
@@ -76,6 +77,21 @@ model VerificationToken {
 
 // ─── Negocio ─────────────────────────────────────────────────────────────────
 
+enum PromotionType {
+  DESCUENTO
+  DOS_X_UNO
+  MENU_ESPECIAL
+  OTRO
+}
+
+enum ReservationStatus {
+  PENDIENTE
+  CONFIRMADA
+  RECHAZADA
+  COMPLETADA
+  CANCELADA
+}
+
 model Restaurant {
   id            String   @id @default(cuid())
   userId        String   @unique
@@ -86,6 +102,7 @@ model Restaurant {
   city          String
   phone         String?
   photos        String[]
+  priceRange    Int?
   latitude      Float?
   longitude     Float?
   openingHours  Json?
@@ -94,9 +111,12 @@ model Restaurant {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  favoritedBy Client[]   @relation("ClientFavorites")
-  menuItems   MenuItem[]
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  favoritedBy  Client[]      @relation("ClientFavorites")
+  menuItems    MenuItem[]
+  reservations Reservation[]
+  promotions   Promotion[]
+  reviews      Review[]
 
   @@map("restaurants")
 }
@@ -126,8 +146,116 @@ model Client {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  favorites Restaurant[] @relation("ClientFavorites")
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  favorites    Restaurant[]  @relation("ClientFavorites")
+  reservations Reservation[]
+  reviews      Review[]
+  benefits     Benefit[]
 
   @@map("clients")
+}
+
+model Reservation {
+  id           String            @id @default(cuid())
+  restaurantId String
+  clientId     String
+  date         DateTime
+  guests       Int
+  status       ReservationStatus @default(PENDIENTE)
+  notes        String?           @db.Text
+  rejectReason String?           @db.Text
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  client     Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("reservations")
+}
+
+model Promotion {
+  id              String        @id @default(cuid())
+  restaurantId    String
+  title           String
+  description     String?       @db.Text
+  type            PromotionType
+  discountPercent Float?
+  validFrom       DateTime
+  validUntil      DateTime
+  conditions      String?       @db.Text
+  active          Boolean       @default(true)
+  usageCount      Int           @default(0)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  benefits   Benefit[]
+
+  @@map("promotions")
+}
+
+model Review {
+  id           String   @id @default(cuid())
+  restaurantId String
+  clientId     String
+  rating       Int
+  comment      String?  @db.Text
+  response     String?  @db.Text
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  client     Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
+}
+
+// ─── Notificaciones ──────────────────────────────────────────────────────────
+
+enum NotificationType {
+  RESERVA_NUEVA
+  RESERVA_CONFIRMADA
+  RESERVA_RECHAZADA
+  NUEVA_RESENA
+  PROMOCION
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String           @db.Text
+  read      Boolean          @default(false)
+  data      Json?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+  @@map("notifications")
+}
+
+// ─── Beneficios ───────────────────────────────────────────────────────────────
+
+enum BenefitStatus {
+  DISPONIBLE
+  CANJEADO
+  EXPIRADO
+}
+
+model Benefit {
+  id          String        @id @default(cuid())
+  clientId    String
+  promotionId String
+  status      BenefitStatus @default(DISPONIBLE)
+  redeemedAt  DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  client    Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  promotion Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, promotionId])
+  @@map("benefits")
 }

@@ -52,9 +52,26 @@
 @layer base {
   * {
     @apply border-border;
+    /* Eliminate 300ms tap delay on mobile */
+    touch-action: manipulation;
   }
   body {
     @apply bg-background text-foreground;
+    /* Prevent text size adjustment on orientation change (iOS) */
+    -webkit-text-size-adjust: 100%;
+  }
+  /* Prevent double-tap zoom on interactive elements */
+  button, a, input, select, textarea {
+    touch-action: manipulation;
+  }
+  /* Native select on mobile: force 16px to prevent iOS zoom */
+  select {
+    font-size: 16px;
+  }
+  @media (min-width: 640px) {
+    select {
+      font-size: 0.875rem; /* text-sm */
+    }
   }
 }
 

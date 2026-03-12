@@ -1,21 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/shared/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, UtensilsCrossed, User } from "lucide-react";
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const role = searchParams.get("role"); // "empresa" | "cliente" | null
+
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const isEmpresa = role === "empresa";
+  const isCliente = role === "cliente";
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -39,16 +45,45 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
+
+        {/* Header */}
         <div className="flex flex-col items-center gap-3 mb-8">
-          <Link href="/"><Logo size="lg" /></Link>
+          <Link href="/info"><Logo size="lg" /></Link>
+
+          {/* Role badge */}
+          {(isEmpresa || isCliente) && (
+            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-medium ${
+              isEmpresa
+                ? "bg-primary/10 border-primary/20 text-primary"
+                : "bg-primary/10 border-primary/20 text-primary"
+            }`}>
+              {isEmpresa
+                ? <><UtensilsCrossed className="w-3.5 h-3.5" /> Ingreso para Restaurantes</>
+                : <><User className="w-3.5 h-3.5" /> Ingreso para Socios</>
+              }
+            </div>
+          )}
+
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-foreground">Bienvenido</h1>
+            <h1 className="text-2xl font-bold text-foreground">
+              {isEmpresa ? "Bienvenido, Restaurante" : isCliente ? "Bienvenido, Socio" : "Bienvenido"}
+            </h1>
             <p className="text-sm text-muted-foreground mt-1">Iniciá sesión en tu cuenta</p>
           </div>
         </div>
+
+        {/* Card */}
         <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
-          <Button type="button" variant="outline" className="w-full gap-3" onClick={handleGoogle} disabled={googleLoading}>
-            {googleLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full gap-3"
+            onClick={handleGoogle}
+            disabled={googleLoading}
+          >
+            {googleLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
               <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -58,40 +93,79 @@ export default function LoginPage() {
             )}
             Continuar con Google
           </Button>
+
           <div className="flex items-center gap-3">
             <Separator className="flex-1" />
             <span className="text-xs text-muted-foreground">o</span>
             <Separator className="flex-1" />
           </div>
+
           <form onSubmit={handleSubmit} className="space-y-3">
             <div className="space-y-1">
               <label className="text-sm font-medium text-foreground">Email</label>
-              <Input name="email" type="email" placeholder="tu@email.com" required autoComplete="email" />
+              <Input
+                name="email"
+                type="email"
+                placeholder="tu@email.com"
+                required
+                autoComplete="email"
+              />
             </div>
             <div className="space-y-1">
               <label className="text-sm font-medium text-foreground">Contraseña</label>
               <div className="relative">
-                <Input name="password" type={showPassword ? "text" : "password"} placeholder="••••••••" required autoComplete="current-password" className="pr-10" />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
+                <Input
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  required
+                  autoComplete="current-password"
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
-            {error && <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2">{error}</p>}
+
+            {error && (
+              <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2">
+                {error}
+              </p>
+            )}
+
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Iniciar sesión"}
             </Button>
           </form>
         </div>
+
+        {/* Footer links */}
         <div className="mt-6 text-center space-y-2">
           <p className="text-sm text-muted-foreground">¿No tenés cuenta?</p>
           <div className="flex items-center justify-center gap-4">
-            <Link href="/registro/empresa" className="text-sm font-medium text-primary hover:underline">Registrar restaurante</Link>
+            <Link href="/registro/empresa" className="text-sm font-medium text-primary hover:underline">
+              Registrar restaurante
+            </Link>
             <span className="text-muted-foreground">·</span>
-            <Link href="/registro/cliente" className="text-sm font-medium text-primary hover:underline">Soy cliente</Link>
+            <Link href="/registro/cliente" className="text-sm font-medium text-primary hover:underline">
+              Soy socio
+            </Link>
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginContent />
+    </Suspense>
   );
 }

@@ -22,7 +22,7 @@ export default async function SplashPage() {
 
       {/* Logo central — clic lleva a bienvenida */}
       <Link
-        href="/bienvenida"
+        href="/info"
         className="group z-10 transition-transform duration-500 hover:scale-105 active:scale-95"
         aria-label="Entrar a Club GTG"
       >
