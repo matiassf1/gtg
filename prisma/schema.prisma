@@ -13,6 +13,15 @@ enum Role {
   ADMIN
 }
 
+enum ClientPlan {
+  MEMBER
+}
+
+enum RestaurantPlan {
+  STANDARD
+  FORMACION_BONIFICADA
+}
+
 // ─── Auth ────────────────────────────────────────────────────────────────────
 
 model User {
@@ -111,7 +120,8 @@ model Restaurant {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  active        Boolean  @default(true)
+  active        Boolean        @default(true)
+  plan          RestaurantPlan?
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   favoritedBy  Client[]      @relation("ClientFavorites")
@@ -166,11 +176,12 @@ model MenuItem {
 }
 
 model Client {
-  id          String   @id @default(cuid())
-  userId      String   @unique
+  id          String     @id @default(cuid())
+  userId      String     @unique
   preferences String[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  plan        ClientPlan @default(MEMBER)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   favorites    Restaurant[]  @relation("ClientFavorites")
