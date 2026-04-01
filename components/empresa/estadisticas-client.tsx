@@ -29,11 +29,11 @@ const ratingPorMes = [
 ];
 
 const platosPopulares = [
-  { nombre: "Asado de tira",     pedidos: 143 },
-  { nombre: "Entraña c/ chimichurri", pedidos: 118 },
-  { nombre: "Empanadas (x6)",    pedidos: 97  },
-  { nombre: "Mollejas a la brasa",pedidos: 84  },
-  { nombre: "Milanesa napolitana",pedidos: 76  },
+  { nombre: "Chuletón de buey",   pedidos: 143 },
+  { nombre: "Croquetas de jamón", pedidos: 118 },
+  { nombre: "Tortilla de patata", pedidos: 97  },
+  { nombre: "Pulpo a la gallega", pedidos: 84  },
+  { nombre: "Patatas bravas",     pedidos: 76  },
 ];
 
 const clientesTipo = [

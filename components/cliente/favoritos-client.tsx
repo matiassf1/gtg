@@ -24,7 +24,7 @@ interface FavRestaurant {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const PRICE_LABELS: Record<number, string> = { 1: "$", 2: "$$", 3: "$$$", 4: "$$$$" };
+const PRICE_LABELS: Record<number, string> = { 1: "€", 2: "€€", 3: "€€€", 4: "€€€€" };
 
 const GRADIENTS = [
   "from-emerald-900/80 to-green-950",
@@ -201,7 +201,7 @@ export function FavoritosClient({ initialFavorites }: { initialFavorites: FavRes
               <Heart className="size-8 text-primary/60" />
             </div>
             <div>
-              <p className="font-semibold text-foreground">No tenés favoritos aún</p>
+              <p className="font-semibold text-foreground">No tienes favoritos aún</p>
               <p className="text-sm text-muted-foreground mt-1">
                 Al explorar restaurantes, tocá el corazón para guardarlos acá.
               </p>

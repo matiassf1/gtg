@@ -44,13 +44,13 @@ interface ReservationClient {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function fmtDate(iso: string) {
-  return new Intl.DateTimeFormat("es-AR", {
+  return new Intl.DateTimeFormat("es-ES", {
     weekday: "short", day: "numeric", month: "short", year: "numeric",
   }).format(new Date(iso));
 }
 
 function fmtTime(iso: string) {
-  return new Intl.DateTimeFormat("es-AR", {
+  return new Intl.DateTimeFormat("es-ES", {
     hour: "2-digit", minute: "2-digit",
   }).format(new Date(iso));
 }
@@ -322,7 +322,7 @@ export function ReservasClient({ initialReservations }: Props) {
       <div>
         <h1 className="text-2xl font-bold text-foreground">Reservas</h1>
         <p className="text-muted-foreground text-sm mt-1">
-          Gestioná las reservas de tu restaurante
+          Gestiona las reservas de tu restaurante
         </p>
       </div>
 

@@ -54,7 +54,7 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("es-AR", { day: "numeric", month: "short", year: "numeric" });
+  return new Date(iso).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" });
 }
 
 function daysLeft(iso: string) {
@@ -263,7 +263,7 @@ function EmptyState({ type }: { type: "disponibles" | "historial" }) {
       </div>
       <div>
         <p className="font-semibold text-foreground">
-          {type === "disponibles" ? "No tenés beneficios disponibles" : "Sin historial aún"}
+          {type === "disponibles" ? "No tienes beneficios disponibles" : "Sin historial aún"}
         </p>
         <p className="text-sm text-muted-foreground mt-1">
           {type === "disponibles"

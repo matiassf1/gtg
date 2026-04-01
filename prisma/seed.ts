@@ -16,35 +16,36 @@ async function main() {
   // ─── Usuarios empresa (restaurantes) ───────────────────────────────────
   const empresaUser1 = await prisma.user.create({
     data: {
-      name: "La Parrilla del Norte",
-      email: "parrilla@gtg.com",
+      name: "El Asador de Malasaña",
+      email: "asador@gtg.com",
       password: passwordHash,
       role: Role.EMPRESA,
       restaurant: {
         create: {
-          name: "La Parrilla del Norte",
-          description: "Especialistas en carnes a la parrilla con mas de 20 años de experiencia. Ambiente familiar y acogedor.",
-          category: "Parrilla",
-          address: "Av. Corrientes 1234",
-          city: "Buenos Aires",
-          phone: "+54 11 4567-8901",
+          name: "El Asador de Malasaña",
+          description: "Especialistas en carnes a la brasa y cocina castellana con más de 20 años de experiencia. Ambiente familiar y acogedor en pleno corazón de Malasaña.",
+          category: "Asador",
+          address: "Calle Fuencarral 42, 28004 Madrid",
+          city: "Madrid",
+          phone: "+34 912 345 678",
           photos: [
             "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800",
             "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800",
           ],
-          latitude: -34.6037,
-          longitude: -58.3816,
+          latitude: 40.4233,
+          longitude: -3.7027,
           openingHours: {
-            lunes:    { abre: "12:00", cierra: "23:00" },
-            martes:   { abre: "12:00", cierra: "23:00" },
-            miercoles:{ abre: "12:00", cierra: "23:00" },
-            jueves:   { abre: "12:00", cierra: "23:00" },
-            viernes:  { abre: "12:00", cierra: "00:00" },
-            sabado:   { abre: "11:00", cierra: "00:00" },
-            domingo:  { abre: "11:00", cierra: "22:00" },
+            lunes:    { abre: "13:00", cierra: "16:00" },
+            martes:   { abre: "13:00", cierra: "16:00" },
+            miercoles:{ abre: "13:00", cierra: "16:00" },
+            jueves:   { abre: "13:00", cierra: "23:30" },
+            viernes:  { abre: "13:00", cierra: "00:00" },
+            sabado:   { abre: "12:00", cierra: "00:00" },
+            domingo:  { abre: "12:00", cierra: "17:00" },
           },
           capacity: 80,
           averageRating: 4.5,
+          plan: "STANDARD",
         },
       },
     },
@@ -53,35 +54,36 @@ async function main() {
 
   const empresaUser2 = await prisma.user.create({
     data: {
-      name: "Sushi Zen",
-      email: "sushizen@gtg.com",
+      name: "Sushi Nishiki",
+      email: "nishiki@gtg.com",
       password: passwordHash,
       role: Role.EMPRESA,
       restaurant: {
         create: {
-          name: "Sushi Zen",
-          description: "Autentica cocina japonesa en el corazon de Palermo. Rolls artesanales y sashimi fresco todos los dias.",
+          name: "Sushi Nishiki",
+          description: "Auténtica cocina japonesa en pleno barrio de Salamanca. Niguiris artesanales y sashimi de primera calidad todos los días.",
           category: "Japonesa",
-          address: "Thames 2050",
-          city: "Buenos Aires",
-          phone: "+54 11 4832-1122",
+          address: "Calle Goya 71, 28001 Madrid",
+          city: "Madrid",
+          phone: "+34 914 567 890",
           photos: [
             "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800",
             "https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=800",
           ],
-          latitude: -34.5849,
-          longitude: -58.4329,
+          latitude: 40.4266,
+          longitude: -3.6817,
           openingHours: {
             lunes:    { cerrado: true },
-            martes:   { abre: "13:00", cierra: "23:00" },
-            miercoles:{ abre: "13:00", cierra: "23:00" },
-            jueves:   { abre: "13:00", cierra: "23:00" },
-            viernes:  { abre: "13:00", cierra: "00:00" },
-            sabado:   { abre: "12:00", cierra: "00:00" },
-            domingo:  { abre: "12:00", cierra: "22:00" },
+            martes:   { abre: "13:30", cierra: "23:30" },
+            miercoles:{ abre: "13:30", cierra: "23:30" },
+            jueves:   { abre: "13:30", cierra: "23:30" },
+            viernes:  { abre: "13:30", cierra: "00:00" },
+            sabado:   { abre: "13:00", cierra: "00:00" },
+            domingo:  { abre: "13:00", cierra: "22:00" },
           },
           capacity: 45,
           averageRating: 4.8,
+          plan: "STANDARD",
         },
       },
     },
@@ -91,13 +93,13 @@ async function main() {
   // ─── Usuarios cliente ───────────────────────────────────────────────────
   const clienteUser1 = await prisma.user.create({
     data: {
-      name: "Juan Perez",
-      email: "juan@gtg.com",
+      name: "Carlos García",
+      email: "carlos@gtg.com",
       password: passwordHash,
       role: Role.CLIENTE,
       client: {
         create: {
-          preferences: ["Parrilla", "Italiana", "Hamburguesas"],
+          preferences: ["Asador", "Italiana", "Hamburguesería"],
           favorites: {
             connect: [{ id: empresaUser1.restaurant!.id }],
           },
@@ -108,13 +110,13 @@ async function main() {
 
   const clienteUser2 = await prisma.user.create({
     data: {
-      name: "Maria Garcia",
+      name: "María López",
       email: "maria@gtg.com",
       password: passwordHash,
       role: Role.CLIENTE,
       client: {
         create: {
-          preferences: ["Japonesa", "Vegana", "Sushi"],
+          preferences: ["Japonesa", "Vegetariana", "Cocina de autor"],
           favorites: {
             connect: [
               { id: empresaUser1.restaurant!.id },
@@ -127,12 +129,12 @@ async function main() {
   });
 
   console.log("✅ Seed completado:");
-  console.log(`   🍖 Restaurante: ${empresaUser1.restaurant?.name} (${empresaUser1.email})`);
+  console.log(`   🥩 Restaurante: ${empresaUser1.restaurant?.name} (${empresaUser1.email})`);
   console.log(`   🍣 Restaurante: ${empresaUser2.restaurant?.name} (${empresaUser2.email})`);
   console.log(`   👤 Cliente: ${clienteUser1.name} (${clienteUser1.email})`);
   console.log(`   👤 Cliente: ${clienteUser2.name} (${clienteUser2.email})`);
   console.log("");
-  console.log("   Password de todos: password123");
+  console.log("   Contraseña de todos: password123");
 }
 
 main()

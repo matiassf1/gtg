@@ -13,9 +13,9 @@ import {
 } from "lucide-react";
 
 const PREFERENCIAS = [
-  "Parrilla", "Italiana", "Japonesa", "Mexicana", "Americana",
-  "Vegetariana", "Vegana", "Mariscos", "Pizza", "Hamburguesas",
-  "Cafetería", "Pastelería", "Fusión", "Española", "Árabe",
+  "Tapas", "Cocina española", "Italiana", "Japonesa", "Asador",
+  "Marisquería", "Cocina de autor", "Mexicana", "Vegetariana",
+  "Pizza", "Hamburguesería", "Cafetería", "Pastelería", "Fusión", "Árabe",
 ];
 
 const BENEFICIOS = [
@@ -185,7 +185,7 @@ export default function RegistroClientePage() {
     e.preventDefault();
     setError("");
     if (selected.length === 0) {
-      setError("Seleccioná al menos una preferencia.");
+      setError("Selecciona al menos una preferencia.");
       return;
     }
     const fd = new FormData(e.currentTarget);
@@ -224,7 +224,7 @@ export default function RegistroClientePage() {
   }
 
   const titles: Record<number, { title: string; subtitle: string }> = {
-    1: { title: "Creá tu cuenta", subtitle: "Descubrí los mejores restaurantes" },
+    1: { title: "Crea tu cuenta", subtitle: "Descubre los mejores restaurantes" },
     2: { title: "Membresía Club GTG", subtitle: "Un único pago para toda la vida" },
     3: { title: "¡Bienvenido al Club!", subtitle: "Procesando tu registro..." },
   };
@@ -403,9 +403,9 @@ export default function RegistroClientePage() {
 
         {step !== 3 && (
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            ¿Ya tenés cuenta?{" "}
+            ¿Ya tienes cuenta?{" "}
             <Link href="/login" className="text-primary font-medium hover:underline">
-              Iniciá sesión
+              Inicia sesión
             </Link>
           </p>
         )}

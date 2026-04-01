@@ -38,7 +38,7 @@ const RATING_COLORS: Record<number, string> = {
 };
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" });
+  return new Date(iso).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
 }
 
 // ─── StarRow ──────────────────────────────────────────────────────────────────
@@ -204,7 +204,7 @@ export function MisResenasClient({ initialReviews }: { initialReviews: Review[] 
             <div>
               <p className="font-semibold text-foreground">Todavía no escribiste reseñas</p>
               <p className="text-sm text-muted-foreground mt-1">
-                Después de visitar un restaurante, podés dejar tu opinión desde la página del local.
+                Después de visitar un restaurante, puedes dejar tu opinión desde la página del local.
               </p>
             </div>
             <Link href="/cliente/explorar">

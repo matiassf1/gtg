@@ -71,7 +71,7 @@ export async function POST(req: Request) {
 
   // Notify restaurant owner
   if (restaurant) {
-    const formattedDate = dateTime.toLocaleDateString("es-AR", {
+    const formattedDate = dateTime.toLocaleDateString("es-ES", {
       weekday: "long", day: "numeric", month: "long",
     });
     await createNotification({

@@ -40,7 +40,7 @@ export default async function ConfiguracionPage() {
       <div>
         <h2 className="text-2xl font-bold text-foreground">Configuración</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Gestioná las preferencias de reservas, horarios, notificaciones y tu cuenta
+          Gestiona las preferencias de reservas, horarios, notificaciones y tu cuenta
         </p>
       </div>
 

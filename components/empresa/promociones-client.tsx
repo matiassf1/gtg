@@ -78,7 +78,7 @@ function getVigencia(p: Promo): Vigencia {
 }
 
 function fmtDate(iso: string) {
-  return new Intl.DateTimeFormat("es-AR", {
+  return new Intl.DateTimeFormat("es-ES", {
     day: "numeric", month: "short", year: "numeric",
   }).format(new Date(iso));
 }
@@ -370,7 +370,7 @@ export function PromocionesClient({ initialPromos }: Props) {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Promociones</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            Gestioná las promociones de tu restaurante
+            Gestiona las promociones de tu restaurante
           </p>
         </div>
         <Button className="gap-2" onClick={openCreate}>

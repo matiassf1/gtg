@@ -13,14 +13,14 @@ import type { Restaurant } from "@prisma/client";
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const CATEGORIAS = [
-  "Parrilla", "Italiana", "Japonesa", "Mexicana", "Americana",
-  "Vegetariana", "Mariscos", "Pizza", "Hamburguesas", "Cafetería",
-  "Pastelería", "Fusión", "Española", "China", "Árabe",
+  "Tapas", "Cocina española", "Asador", "Marisquería", "Italiana",
+  "Japonesa", "Mexicana", "Cocina de autor", "Vegetariana",
+  "Pizza", "Hamburguesería", "Cafetería", "Pastelería", "Fusión", "Árabe",
 ];
 
 const CIUDADES = [
-  "Buenos Aires", "Córdoba", "Rosario", "Mendoza", "La Plata",
-  "Mar del Plata", "San Miguel de Tucumán", "Salta", "Santa Fe", "Otra",
+  "Madrid", "Barcelona", "Valencia", "Sevilla", "Bilbao",
+  "Málaga", "Zaragoza", "Murcia", "Palma", "Las Palmas", "Otra",
 ];
 
 const DIAS = [
@@ -115,7 +115,7 @@ export function PerfilForm({ restaurant }: { restaurant: Restaurant }) {
     if (!files) return;
     const remaining = 8 - photos.length;
     if (remaining <= 0) {
-      toast({ title: "Máximo 8 fotos", description: "Eliminá alguna para agregar más.", variant: "destructive" });
+      toast({ title: "Máximo 8 fotos", description: "Elimina alguna para agregar más.", variant: "destructive" });
       return;
     }
     const incoming: PhotoItem[] = [];
@@ -180,10 +180,10 @@ export function PerfilForm({ restaurant }: { restaurant: Restaurant }) {
     try {
       const res = await fetch("/api/empresa/perfil", { method: "PATCH", body: fd });
       if (!res.ok) throw new Error();
-      toast({ title: "¡Perfil guardado!", description: "Los cambios se aplicaron correctamente." });
+      toast({ title: "¡Perfil guardado!", description: "Los cambios se han aplicado correctamente." });
       router.refresh();
     } catch {
-      toast({ title: "Error al guardar", description: "Intentá de nuevo.", variant: "destructive" });
+      toast({ title: "Error al guardar", description: "Inténtalo de nuevo.", variant: "destructive" });
     } finally {
       setSaving(false);
     }
@@ -227,7 +227,7 @@ export function PerfilForm({ restaurant }: { restaurant: Restaurant }) {
             onChange={(e) => setDescription(e.target.value)}
             maxLength={500}
             rows={4}
-            placeholder="Contá la historia de tu restaurante, tu propuesta gastronómica, qué te hace único..."
+            placeholder="Cuenta la historia de tu restaurante, tu propuesta gastronómica, qué te hace único..."
             className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-y min-h-[100px]"
           />
         </div>
@@ -241,7 +241,7 @@ export function PerfilForm({ restaurant }: { restaurant: Restaurant }) {
               required
               className={SELECT_CLASS}
             >
-              <option value="">Seleccioná</option>
+              <option value="">Selecciona</option>
               {CATEGORIAS.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
@@ -251,7 +251,7 @@ export function PerfilForm({ restaurant }: { restaurant: Restaurant }) {
             <Input
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="+54 11 1234-5678"
+              placeholder="+34 612 345 678"
               type="tel"
             />
           </div>
@@ -270,7 +270,7 @@ export function PerfilForm({ restaurant }: { restaurant: Restaurant }) {
           <Input
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            placeholder="Av. Corrientes 1234, CABA"
+            placeholder="Ej: Calle Gran Vía 28, 28013 Madrid"
           />
         </div>
 
@@ -282,7 +282,7 @@ export function PerfilForm({ restaurant }: { restaurant: Restaurant }) {
             required
             className={SELECT_CLASS}
           >
-            <option value="">Seleccioná</option>
+            <option value="">Selecciona</option>
             {CIUDADES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
         </div>
@@ -292,7 +292,7 @@ export function PerfilForm({ restaurant }: { restaurant: Restaurant }) {
       <section className="bg-card border border-border rounded-xl p-6 space-y-5">
         <SectionHeader
           title="Horarios de atención"
-          sub="Configurá los días y horarios en que atendés"
+          sub="Configura los días y horarios en que atiendes"
         />
 
         <div className="space-y-2">
@@ -405,10 +405,10 @@ export function PerfilForm({ restaurant }: { restaurant: Restaurant }) {
             </div>
             <div className="text-center">
               <p className="text-sm font-medium text-foreground">
-                {isDragging ? "Soltá para subir" : "Arrastrá las fotos aquí"}
+                {isDragging ? "Suelta para subir" : "Arrastra las fotos aquí"}
               </p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                o hacé clic para seleccionar · quedan {8 - photos.length} lugares
+                o haz clic para seleccionar · quedan {8 - photos.length} lugares
               </p>
             </div>
             <input

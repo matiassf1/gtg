@@ -61,23 +61,23 @@ function FadeIn({
 const RESTAURANT_BENEFITS = [
   {
     icon: TrendingUp,
-    title: "Gestioná tu negocio",
-    desc: "Administrá reservas, menú y promociones desde un panel centralizado e intuitivo.",
+    title: "Gestiona tu negocio",
+    desc: "Administra reservas, menú y promociones desde un panel centralizado e intuitivo.",
   },
   {
     icon: Users,
-    title: "Atraé nuevos clientes",
-    desc: "Conectate con miles de socios del club que buscan experiencias gastronómicas únicas.",
+    title: "Atrae nuevos clientes",
+    desc: "Conéctate con miles de socios del club que buscan experiencias gastronómicas únicas.",
   },
   {
     icon: Tag,
     title: "Promociones inteligentes",
-    desc: "Creá beneficios exclusivos para los miembros del club y medí su impacto en tiempo real.",
+    desc: "Crea beneficios exclusivos para los miembros del club y mide su impacto en tiempo real.",
   },
   {
     icon: BarChart3,
     title: "Métricas en tiempo real",
-    desc: "Visualizá el rendimiento de tu negocio con datos claros sobre reservas, reseñas y más.",
+    desc: "Visualiza el rendimiento de tu negocio con datos claros sobre reservas, reseñas y más.",
   },
 ];
 
@@ -85,32 +85,32 @@ const CLIENT_BENEFITS = [
   {
     icon: Star,
     title: "Descuentos exclusivos",
-    desc: "Accedé a beneficios especiales en los mejores restaurantes de la ciudad, solo para socios.",
+    desc: "Accede a beneficios especiales en los mejores restaurantes de la ciudad, solo para socios.",
   },
   {
     icon: Clock,
     title: "Reservas prioritarias",
-    desc: "Saltate las listas de espera con acceso prioritario en todos los restaurantes afiliados.",
+    desc: "Sáltate las listas de espera con acceso prioritario en todos los restaurantes afiliados.",
   },
   {
     icon: Utensils,
-    title: "Descubrí nuevos sabores",
-    desc: "Explorá una curaduría de restaurantes seleccionados por calidad y propuesta gastronómica.",
+    title: "Descubre nuevos sabores",
+    desc: "Explora una selección de restaurantes elegidos por su calidad y propuesta gastronómica.",
   },
   {
     icon: Gift,
-    title: "Acumulá beneficios",
-    desc: "Cada visita suma puntos que podés canjear en experiencias y descuentos futuros.",
+    title: "Acumula beneficios",
+    desc: "Cada visita suma puntos que puedes canjear en experiencias y descuentos futuros.",
   },
 ];
 
 const MOCK_RESTAURANTS = [
-  { name: "La Bourgogne",  category: "Francesa",        photo: "photo-1414235077428-338989a2e8c0" },
-  { name: "Don Julio",     category: "Parrilla",         photo: "photo-1544025162-d76538748e34" },
-  { name: "El Preferido",  category: "Porteña",          photo: "photo-1555396273-367ea4eb4db5" },
-  { name: "Osaka",         category: "Nikkei",           photo: "photo-1579871494447-9811cf80d66c" },
-  { name: "Tegui",         category: "Contemporánea",    photo: "photo-1551218808-94e220e084d2" },
-  { name: "Chila",         category: "Alta cocina",      photo: "photo-1559339352-11d035aa65de" },
+  { name: "Diverxo",          category: "Cocina de autor",  photo: "photo-1414235077428-338989a2e8c0" },
+  { name: "El Club Allard",   category: "Alta cocina",      photo: "photo-1544025162-d76538748e34" },
+  { name: "Casa Botín",       category: "Cocina española",  photo: "photo-1555396273-367ea4eb4db5" },
+  { name: "Barra M",          category: "Tapas",            photo: "photo-1579871494447-9811cf80d66c" },
+  { name: "Alabaster",        category: "Contemporánea",    photo: "photo-1551218808-94e220e084d2" },
+  { name: "El Paraguas",      category: "Marisquería",      photo: "photo-1559339352-11d035aa65de" },
 ];
 
 /* ─────────────────────────────────────────────
@@ -215,7 +215,7 @@ export default function InfoPage() {
 
         {/* Scroll cue */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground/40">
-          <span className="text-xs tracking-widest uppercase">Descubrí más</span>
+          <span className="text-xs tracking-widest uppercase">Descubre más</span>
           <div className="w-px h-8 bg-gradient-to-b from-muted-foreground/40 to-transparent" />
         </div>
       </section>
@@ -228,13 +228,13 @@ export default function InfoPage() {
               <h2 className="text-3xl sm:text-4xl font-bold mb-6">¿Qué es el Club GTG?</h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  El Club Gastronómico GTG es una plataforma de fidelización y descubrimiento culinario que une a los mejores restaurantes de la ciudad con una comunidad de comensales apasionados. Nuestro modelo crea un ecosistema donde todos ganan: los restaurantes crecen y los socios disfrutan de experiencias únicas.
+                  El Club Gastronómico GTG es una plataforma de fidelización y descubrimiento culinario que une a los mejores restaurantes de Madrid con una comunidad de comensales apasionados. Nuestro modelo crea un ecosistema donde todos ganan: los restaurantes crecen y los socios disfrutan de experiencias únicas.
                 </p>
                 <p>
-                  A través de GTG, los socios acceden a beneficios exclusivos, reservas prioritarias y descuentos en una red cuidadosamente seleccionada de establecimientos. Cada visita se transforma en una experiencia gastronómica memorable, respaldada por la calidad y el compromiso de los restaurantes afiliados.
+                  A través de GTG, los socios acceden a beneficios exclusivos, reservas prioritarias y descuentos en una red cuidadosamente seleccionada de establecimientos madrileños. Cada visita se transforma en una experiencia gastronómica memorable, respaldada por la calidad y el compromiso de los restaurantes afiliados.
                 </p>
                 <p>
-                  Para los restaurantes, GTG es mucho más que una plataforma de reservas. Es una herramienta de gestión integral que les permite conocer mejor a sus clientes, crear promociones inteligentes y construir una base de comensales leales y comprometidos con la propuesta gastronómica del establecimiento.
+                  Para los restaurantes, GTG es mucho más que una plataforma de reservas. Es una herramienta de gestión integral que les permite conocer mejor a sus clientes, crear promociones inteligentes y construir una base de comensales fieles y comprometidos con la propuesta gastronómica del establecimiento.
                 </p>
               </div>
             </FadeIn>
@@ -263,7 +263,7 @@ export default function InfoPage() {
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold">Para Restaurantes</h2>
             <p className="text-muted-foreground mt-3 max-w-xl mx-auto">
-              Sumarte al club te abre las puertas a una nueva forma de gestionar y hacer crecer tu negocio gastronómico.
+              Unirte al club te abre las puertas a una nueva forma de gestionar y hacer crecer tu negocio gastronómico.
             </p>
           </FadeIn>
 

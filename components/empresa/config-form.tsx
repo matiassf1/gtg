@@ -469,7 +469,7 @@ export function ConfigForm({ config: initial }: { config: ConfigData }) {
           <SectionHeader
             icon={Clock}
             title="Horarios de Reserva"
-            sub="Configurá en qué días y horarios aceptás reservas (podés tener 2 turnos por día)"
+            sub="Configura en qué días y horarios aceptas reservas (puedes tener 2 turnos por día)"
           />
 
           <div className="space-y-2">
@@ -569,7 +569,7 @@ export function ConfigForm({ config: initial }: { config: ConfigData }) {
           <SectionHeader
             icon={Bell}
             title="Notificaciones"
-            sub="Elegí qué alertas querés recibir por email"
+            sub="Elige qué alertas quieres recibir por correo electrónico"
           />
 
           {[

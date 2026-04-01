@@ -14,14 +14,14 @@ import {
 } from "lucide-react";
 
 const CATEGORIAS = [
-  "Parrilla", "Italiana", "Japonesa", "Mexicana", "Americana",
-  "Vegetariana", "Mariscos", "Pizza", "Hamburguesas", "Cafetería",
-  "Pastelería", "Fusión", "Española", "China", "Árabe",
+  "Tapas", "Cocina española", "Asador", "Marisquería", "Italiana",
+  "Japonesa", "Mexicana", "Cocina de autor", "Vegetariana",
+  "Pizza", "Hamburguesería", "Cafetería", "Pastelería", "Fusión", "Árabe",
 ];
 
 const CIUDADES = [
-  "Buenos Aires", "Córdoba", "Rosario", "Mendoza", "La Plata",
-  "Mar del Plata", "San Miguel de Tucumán", "Salta", "Santa Fe", "Otra",
+  "Madrid", "Barcelona", "Valencia", "Sevilla", "Bilbao",
+  "Málaga", "Zaragoza", "Murcia", "Palma", "Las Palmas", "Otra",
 ];
 
 const BENEFICIOS = [
@@ -204,14 +204,14 @@ function FormativaModal({
 
         <p className="text-sm text-muted-foreground mb-5">
           Un asesor se pondrá en contacto contigo para gestionar la bonificación formativa.
-          Por favor dejá tu número de teléfono.
+          Por favor deja tu número de teléfono.
         </p>
 
         <div className="space-y-1.5 mb-6">
           <label className="text-sm font-medium text-foreground">Teléfono de contacto</label>
           <div className="relative">
             <Input
-              placeholder="+54 11 1234-5678"
+              placeholder="+34 612 345 678"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               className="pl-10"
@@ -391,13 +391,13 @@ export default function RegistroEmpresaPage() {
           <Link href="/"><Logo size="lg" /></Link>
           <div className="text-center">
             <h1 className="text-2xl font-bold text-foreground">
-              {step === 1 ? "Registrá tu restaurante" : step === 2 ? "Elegí tu plan" : "¡Bienvenido!"}
+              {step === 1 ? "Registra tu restaurante" : step === 2 ? "Elige tu plan" : "¡Bienvenido!"}
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
               {step === 1
-                ? "Creá tu cuenta como empresa"
+                ? "Crea tu cuenta como empresa"
                 : step === 2
-                ? "Seleccioná cómo querés afiliarte al Club"
+                ? "Selecciona cómo quieres afiliarte al Club"
                 : "Procesando tu registro..."}
             </p>
           </div>
@@ -435,14 +435,14 @@ export default function RegistroEmpresaPage() {
                 <div className="space-y-1">
                   <label className="text-sm font-medium text-foreground">Categoría</label>
                   <select name="category" required className={SELECT_CLASS} defaultValue={formValues.category}>
-                    <option value="">Seleccioná</option>
+                    <option value="">Selecciona</option>
                     {CATEGORIAS.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div className="space-y-1">
                   <label className="text-sm font-medium text-foreground">Ciudad</label>
                   <select name="city" required className={SELECT_CLASS} defaultValue={formValues.city}>
-                    <option value="">Seleccioná</option>
+                    <option value="">Selecciona</option>
                     {CIUDADES.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
@@ -564,9 +564,9 @@ export default function RegistroEmpresaPage() {
 
         {step !== 3 && (
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            ¿Ya tenés cuenta?{" "}
+            ¿Ya tienes cuenta?{" "}
             <Link href="/login" className="text-primary font-medium hover:underline">
-              Iniciá sesión
+              Inicia sesión
             </Link>
           </p>
         )}

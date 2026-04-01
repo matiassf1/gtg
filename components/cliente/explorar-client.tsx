@@ -30,7 +30,7 @@ export interface RestaurantCard {
 
 const PAGE_SIZE = 12;
 
-const PRICE_LABELS: Record<number, string> = { 1: "$", 2: "$$", 3: "$$$", 4: "$$$$" };
+const PRICE_LABELS: Record<number, string> = { 1: "€", 2: "€€", 3: "€€€", 4: "€€€€" };
 const PRICE_DESC:   Record<number, string> = {
   1: "Económico", 2: "Moderado", 3: "Elevado", 4: "Premium",
 };
