@@ -16,7 +16,7 @@ export async function createNotification(input: CreateNotificationInput) {
       type: input.type,
       title: input.title,
       message: input.message,
-      data: input.data ?? undefined,
+      data: input.data ? JSON.parse(JSON.stringify(input.data)) : undefined,
     },
   });
 }

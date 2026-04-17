@@ -679,7 +679,7 @@ function Sidebar({ restaurant, isFavorited: initial, canReserve }: SidebarProps)
             <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5" />
             <span>{restaurant.address}, {restaurant.city}</span>
           </div>
-          {restaurant.openingHours && (
+          {!!restaurant.openingHours && (
             <HoursAccordion hours={restaurant.openingHours as OpeningHours} />
           )}
         </div>
