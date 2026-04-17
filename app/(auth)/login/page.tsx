@@ -68,7 +68,7 @@ function LoginContent() {
             <h1 className="text-2xl font-bold text-foreground">
               {isEmpresa ? "Bienvenido, Restaurante" : isCliente ? "Bienvenido, Socio" : "Bienvenido"}
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">Iniciá sesión en tu cuenta</p>
+            <p className="text-sm text-muted-foreground mt-1">Inicia sesión en tu cuenta</p>
           </div>
         </div>
 
@@ -146,14 +146,14 @@ function LoginContent() {
 
         {/* Footer links */}
         <div className="mt-6 text-center space-y-2">
-          <p className="text-sm text-muted-foreground">¿No tenés cuenta?</p>
+          <p className="text-sm text-muted-foreground">¿No tienes cuenta?</p>
           <div className="flex items-center justify-center gap-4">
             <Link href="/registro/empresa" className="text-sm font-medium text-primary hover:underline">
               Registrar restaurante
             </Link>
             <span className="text-muted-foreground">·</span>
             <Link href="/registro/cliente" className="text-sm font-medium text-primary hover:underline">
-              Soy socio
+              Hacerme socio
             </Link>
           </div>
         </div>

@@ -30,6 +30,8 @@ export async function registerEmpresa(formData: FormData) {
     city: formData.get("city") as string,
   };
 
+  const plan = (formData.get("plan") as string) || "STANDARD";
+
   const parsed = empresaSchema.safeParse(raw);
   if (!parsed.success) {
     return { error: "Datos inválidos. Revisá los campos." };
@@ -52,6 +54,7 @@ export async function registerEmpresa(formData: FormData) {
           category: raw.category,
           city: raw.city,
           address: "",
+          plan: plan as "STANDARD" | "FORMACION_BONIFICADA",
         },
       },
     },
@@ -87,6 +90,7 @@ export async function registerCliente(formData: FormData) {
       client: {
         create: {
           preferences: raw.preferences,
+          plan: "MEMBER",
         },
       },
     },

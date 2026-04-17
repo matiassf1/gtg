@@ -48,7 +48,7 @@ export interface RestaurantDetailData {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const PRICE_LABELS: Record<number, string> = { 1: "$", 2: "$$", 3: "$$$", 4: "$$$$" };
+const PRICE_LABELS: Record<number, string> = { 1: "€", 2: "€€", 3: "€€€", 4: "€€€€" };
 
 const DIAS = [
   { key: "lunes",     label: "Lun" },
@@ -73,13 +73,13 @@ const TIME_SLOTS = Array.from({ length: 23 }, (_, i) => {
 }).filter((t) => parseInt(t) <= 22);
 
 function fmtDate(iso: string) {
-  return new Intl.DateTimeFormat("es-AR", {
+  return new Intl.DateTimeFormat("es-ES", {
     day: "numeric", month: "long", year: "numeric",
   }).format(new Date(iso));
 }
 
 function fmtUntil(iso: string) {
-  return new Intl.DateTimeFormat("es-AR", { day: "numeric", month: "short" }).format(new Date(iso));
+  return new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "short" }).format(new Date(iso));
 }
 
 const todayStr = new Date().toISOString().split("T")[0];
@@ -214,7 +214,7 @@ function MenuTab({ items }: { items: MenuItemData[] }) {
                       {item.name}
                     </p>
                     <span className="text-sm font-bold text-primary shrink-0">
-                      ${item.price.toLocaleString("es-AR")}
+                      {item.price.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€
                     </span>
                   </div>
                   {item.description && (
@@ -254,7 +254,7 @@ function LeaveReviewModal({ open, onClose, restaurantId, onSuccess }: LeaveRevie
   const [saving, setSaving]   = useState(false);
 
   async function submit() {
-    if (rating === 0) { toast({ title: "Elegí una valoración", variant: "destructive" }); return; }
+    if (rating === 0) { toast({ title: "Elige una valoración", variant: "destructive" }); return; }
     setSaving(true);
     try {
       const res = await fetch("/api/cliente/resenas", {
@@ -309,7 +309,7 @@ function LeaveReviewModal({ open, onClose, restaurantId, onSuccess }: LeaveRevie
             rows={4}
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            placeholder="Contá tu experiencia (opcional)..."
+            placeholder="Cuenta tu experiencia (opcional)..."
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
           />
         </div>
@@ -468,7 +468,7 @@ function ReservaModal({ open, onClose, restaurantId, restaurantName }: ReservaMo
   }
 
   async function submit() {
-    if (!form.date) { toast({ title: "Elegí una fecha", variant: "destructive" }); return; }
+    if (!form.date) { toast({ title: "Elige una fecha", variant: "destructive" }); return; }
     setSaving(true);
     try {
       const res = await fetch("/api/cliente/reservas", {
@@ -679,7 +679,7 @@ function Sidebar({ restaurant, isFavorited: initial, canReserve }: SidebarProps)
             <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5" />
             <span>{restaurant.address}, {restaurant.city}</span>
           </div>
-          {restaurant.openingHours && (
+          {!!restaurant.openingHours && (
             <HoursAccordion hours={restaurant.openingHours as OpeningHours} />
           )}
         </div>

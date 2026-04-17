@@ -46,7 +46,7 @@ export default async function BienvenidaPage() {
           <div>
             <h2 className="text-xl font-bold text-foreground">Soy Empresa</h2>
             <p className="text-muted-foreground text-sm mt-1">
-              Registrá tu restaurante y llegá a miles de clientes gastronómicos
+              Registra tu restaurante y llega a miles de clientes gastronómicos
             </p>
           </div>
           <Link href="/registro/empresa" className="w-full mt-auto">

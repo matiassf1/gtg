@@ -1,0 +1,259 @@
+DIECISIETE PROMPT
+=================
+Fecha: 2026-03-24
+Tarea: Pantallas de pago/suscripción en el flujo de registro (solo visual, sin pasarela real)
+
+═══════════════════════════════════════════════════════════════════════════════
+RESUMEN
+═══════════════════════════════════════════════════════════════════════════════
+
+Se agregó un flujo de registro en múltiples pasos (stepper de 3 pasos) a ambas
+páginas de registro, junto con modales de pago simulados, y se actualizó el
+schema de Prisma para guardar el plan elegido por cada usuario.
+
+═══════════════════════════════════════════════════════════════════════════════
+ARCHIVOS MODIFICADOS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. prisma/schema.prisma
+───────────────────────
+QUÉ SE HIZO:
+Se agregaron dos nuevos enums y dos nuevos campos al schema de base de datos.
+
+Enums agregados:
+  enum ClientPlan {
+    MEMBER
+  }
+  enum RestaurantPlan {
+    STANDARD
+    FORMACION_BONIFICADA
+  }
+
+Campo en modelo Client:
+  plan  ClientPlan  @default(MEMBER)
+  — Guarda el plan del socio. Por ahora solo existe MEMBER, pero el enum
+    permite agregar más planes en el futuro (PREMIUM, VIP, etc.).
+
+Campo en modelo Restaurant:
+  plan  RestaurantPlan?
+  — Guarda el plan de afiliación elegido por el restaurante durante el
+    registro. Es nullable (?) para no romper restaurantes existentes creados
+    antes de esta funcionalidad.
+
+POR QUÉ:
+  El usuario pidió guardar en Prisma qué plan eligió cada cuenta, para poder
+  usarlo en lógica futura (mostrar badge de plan, habilitar/deshabilitar
+  features según plan, etc.).
+
+MIGRACIÓN NECESARIA:
+  npx prisma migrate dev --name add-plan-fields
+  (detener el servidor dev antes de correr este comando)
+
+
+2. lib/actions/auth.ts
+───────────────────────
+QUÉ SE HIZO:
+Se actualizaron las dos server actions de registro para leer y guardar el
+campo "plan" del FormData.
+
+  registerCliente:
+    - Ahora guarda plan: "MEMBER" al crear el Client.
+    - Hardcodeado como MEMBER ya que es el único plan de clientes.
+
+  registerEmpresa:
+    - Ahora lee fd.get("plan") del FormData.
+    - Lo pasa al create de Restaurant como plan: "STANDARD" | "FORMACION_BONIFICADA".
+    - Default: "STANDARD" si no se envía el campo.
+
+POR QUÉ:
+  Sin este cambio, el campo plan quedaría null en la base de datos aunque el
+  usuario seleccione un plan en el frontend. La server action es el único
+  punto donde se escribe en la DB.
+
+
+3. app/(auth)/registro/cliente/page.tsx  [REESCRITO]
+─────────────────────────────────────────────────────
+QUÉ SE HIZO:
+Se reescribió la página de registro de clientes con un flujo de 3 pasos.
+
+COMPONENTES DENTRO DEL ARCHIVO:
+
+  Stepper ({ step }):
+    Barra de progreso horizontal con 3 pasos: "Datos → Membresía → Confirmación".
+    - Paso completado: círculo verde sólido con checkmark.
+    - Paso activo: círculo con borde verde y texto verde.
+    - Paso futuro: círculo con borde gris.
+    - Línea horizontal entre pasos cambia de gris a verde al completarse.
+
+  PaymentModal ({ isOpen, onClose, onConfirm, price, loading }):
+    Modal de pago simulado que aparece desde abajo en móvil y centrado en desktop.
+    - Ícono de candado + texto "Pago seguro · Cifrado SSL 256-bit".
+    - Input: número de tarjeta (placeholder visual, no valida).
+    - Inputs: vencimiento MM/AA y CVC.
+    - Input: nombre en la tarjeta.
+    - Botón "Confirmar pago · 9,99€" con ícono de candado.
+    - Overlay oscuro con blur — click fuera cierra el modal (si no está cargando).
+    - Nota al pie: "Pago simulado — ningún dato es procesado".
+
+FLUJO DE LA PÁGINA:
+
+  Estado "step":
+    1 → Formulario de datos personales (nombre, email, contraseña, preferencias)
+    2 → Card de membresía con beneficios + botón "Pagar y unirme al Club"
+    3 → Pantalla de loading mientras signIn() redirige
+
+  Step 1:
+    - Igual al formulario anterior pero con botón "Siguiente →" (no "Crear cuenta").
+    - Al hacer submit, guarda los valores en el estado formValues y avanza a step 2.
+    - No llama a registerCliente todavía.
+    - Botón "Volver" en step 2 regresa a step 1 con los datos preservados.
+
+  Step 2:
+    - Card con borde verde y glow sutil.
+    - Badge "Club GTG" con ícono de sparkle.
+    - Precio "9,99€" en verde #39ff14 a 3.5rem de tamaño.
+    - Subtítulo "Pago único · Acceso de por vida".
+    - Lista de 5 beneficios con íconos check verdes:
+        * Acceso a restaurantes exclusivos
+        * Descuentos y promociones
+        * Reservas prioritarias
+        * Participación en el ranking de socios
+        * Experiencias gastronómicas únicas
+    - Botón "Pagar y unirme al Club" → abre PaymentModal.
+
+  handleConfirmPayment():
+    - Construye el FormData con los valores guardados de step 1 + plan="MEMBER".
+    - Llama a registerCliente(fd) — aquí sí crea la cuenta en DB.
+    - Si hay error (email ya existe, etc.), muestra el error y cierra el modal.
+    - Si es exitoso, avanza a step 3 y llama a signIn() que redirige a /cliente/explorar.
+
+  Step 3:
+    - Spinner con texto "¡Registro exitoso! · Ingresando al Club GTG..."
+    - Visible mientras signIn() procesa la sesión y redirige.
+
+
+4. app/(auth)/registro/empresa/page.tsx  [REESCRITO]
+─────────────────────────────────────────────────────
+QUÉ SE HIZO:
+Se reescribió la página de registro de empresas con un flujo de 3 pasos y
+dos opciones de plan.
+
+COMPONENTES DENTRO DEL ARCHIVO:
+
+  Stepper ({ step }):
+    Igual al de cliente pero con pasos: "Datos → Plan → Confirmación".
+
+  PaymentModal:
+    Idéntico al de cliente pero con precio "400€".
+
+  FormativaModal ({ isOpen, onClose, onConfirm, loading }):
+    Modal de consulta para el plan de Bonificación Formativa.
+    - Ícono de MessageSquare + título "Bonificación Formativa".
+    - Texto explicativo: "Un asesor se pondrá en contacto contigo...".
+    - Input de teléfono con ícono de Phone.
+    - Botón "Enviar solicitud".
+    - Al confirmar: llama a completeRegistration("FORMACION_BONIFICADA").
+
+  PlanCard ({ title, price, priceLabel, badge, benefits, isSelected, ... }):
+    Componente reutilizable para mostrar una card de plan.
+    Props clave:
+      - variant "solid" → botón verde sólido (Plan Estándar)
+      - variant "outline" → botón outline verde (Bonificación Formativa)
+      - isSelected → aplica borde verde sólido y glow
+      - badge → muestra badge "Consultar disponibilidad" en la parte superior
+    Comportamiento hover: borde verde difuso al pasar el mouse.
+    Click en la card completa → equivale a hacer click en el botón primario.
+
+FLUJO DE LA PÁGINA:
+
+  Step 1:
+    - Mismo formulario que antes (nombre, restaurante, categoría, ciudad, email, contraseña).
+    - Botón "Siguiente →" guarda valores en formValues y avanza a step 2.
+    - Los selects usan la clase SELECT_CLASS con h-11 para cumplir touch target de 44px.
+
+  Step 2:
+    - Grid de 2 columnas en desktop, 1 columna en móvil (grid-cols-1 sm:grid-cols-2).
+    - Dos cards lado a lado:
+
+    CARD 1 — "Plan Estándar":
+      Precio: 400€ en verde #39ff14 a 2.75rem.
+      Subtítulo: "/ año".
+      6 beneficios listados.
+      Botón verde sólido "Seleccionar plan".
+      Al hacer click → selectedPlan = "STANDARD" → abre PaymentModal.
+
+    CARD 2 — "Bonificación Formativa":
+      Precio: "Crédito formativo" (texto, no número).
+      Subtítulo: "Bonificado por formación".
+      Badge superior: "Consultar disponibilidad".
+      Mismos 6 beneficios.
+      Botón outline verde "Solicitar información".
+      Al hacer click → selectedPlan = "FORMACION_BONIFICADA" → abre FormativaModal.
+
+  completeRegistration(plan):
+    Función compartida por ambos flujos (pago y formativa).
+    - Construye FormData con los datos de step 1 + el plan elegido.
+    - Llama a registerEmpresa(fd).
+    - Si error: muestra mensaje, cierra modales.
+    - Si exitoso: avanza a step 3, llama a signIn() → redirige a /empresa/dashboard.
+
+  Step 3:
+    - Spinner con texto "¡Restaurante registrado! · Ingresando al panel de gestión..."
+
+
+═══════════════════════════════════════════════════════════════════════════════
+DECISIONES DE DISEÑO
+═══════════════════════════════════════════════════════════════════════════════
+
+1. LOS DATOS NO SE ENVÍAN EN STEP 1, SINO EN LA CONFIRMACIÓN DE PAGO
+   El formulario de step 1 guarda los datos en React state (formValues) al
+   hacer submit. registerCliente/registerEmpresa solo se llama cuando el usuario
+   confirma el pago o envía la solicitud formativa. Esto evita crear cuentas
+   que nunca completan el pago y mantiene el flujo atómico.
+
+2. MODALES COMO OVERLAYS PROPIOS (sin Radix Dialog)
+   Los modales de pago se implementaron como divs fixed con backdrop en lugar
+   de usar el componente Dialog de Radix. Esto da más control visual sobre la
+   animación slide-from-bottom en móvil y el look "payment processor" que se
+   buscaba, sin depender del comportamiento estándar de Dialog.
+
+3. PLAN NULLABLE EN RESTAURANT
+   El campo plan en Restaurant es opcional (RestaurantPlan?) para que los
+   restaurantes creados antes de esta migración (como los del seed) no fallen
+   con un valor null obligatorio.
+
+4. RESPONSIVE: CARDS APILADAS EN MÓVIL
+   El grid de las dos cards de plan usa grid-cols-1 sm:grid-cols-2. En móvil
+   (375px) las cards se apilan verticalmente para que sean legibles y los
+   botones alcancen la altura mínima de touch target.
+
+5. PAGO SIMULADO — SIN DATOS REALES
+   Los inputs de tarjeta, vencimiento y CVC no tienen validación ni estado
+   controlado. No se envían a ningún endpoint. Al hacer "Confirmar pago",
+   se llama directamente a registerCliente/registerEmpresa con los datos del
+   formulario de registro. Esto cumple el requisito de "solo visual".
+
+6. TOAST "¡BIENVENIDO AL CLUB GTG!" NO SE IMPLEMENTÓ EXPLÍCITAMENTE
+   signIn() de NextAuth redirige automáticamente a la callbackUrl, lo que
+   descarga la página actual. No es posible mostrar un toast antes de que
+   ocurra la redirección. El mensaje de éxito se muestra en el step 3
+   ("¡Registro exitoso!") mientras el signIn procesa.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+PASOS NECESARIOS DESPUÉS DE ESTE CAMBIO
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Detener el servidor dev (Ctrl+C)
+2. Correr la migración:
+   npx prisma migrate dev --name add-plan-fields
+3. Reiniciar el servidor:
+   npm run dev
+
+Sin la migración, las tablas clients y restaurants no tendrán la columna
+"plan" y el registro fallará con un error de Prisma.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+FIN DEL DOCUMENTO
+═══════════════════════════════════════════════════════════════════════════════

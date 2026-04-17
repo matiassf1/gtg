@@ -44,13 +44,13 @@ const STATS = [
 ];
 
 const RESERVAS_HOY = [
-  { id: 1, name: "María García",   time: "12:30", guests: 4, status: "confirmada", phone: "+54 11 4567-8901" },
-  { id: 2, name: "Carlos López",   time: "13:00", guests: 2, status: "pendiente",  phone: "+54 11 5678-9012" },
-  { id: 3, name: "Ana Rodríguez",  time: "13:30", guests: 6, status: "confirmada", phone: "+54 11 6789-0123" },
-  { id: 4, name: "Juan Martínez",  time: "14:00", guests: 3, status: "pendiente",  phone: "+54 11 7890-1234" },
-  { id: 5, name: "Laura Sánchez",  time: "14:30", guests: 2, status: "confirmada", phone: "+54 11 8901-2345" },
-  { id: 6, name: "Diego Fernández",time: "20:00", guests: 5, status: "pendiente",  phone: "+54 11 9012-3456" },
-  { id: 7, name: "Sofía Morales",  time: "20:30", guests: 2, status: "confirmada", phone: "+54 11 0123-4567" },
+  { id: 1, name: "María García",   time: "12:30", guests: 4, status: "confirmada", phone: "+34 612 345 678" },
+  { id: 2, name: "Carlos López",   time: "13:00", guests: 2, status: "pendiente",  phone: "+34 623 456 789" },
+  { id: 3, name: "Ana Rodríguez",  time: "13:30", guests: 6, status: "confirmada", phone: "+34 634 567 890" },
+  { id: 4, name: "Juan Martínez",  time: "14:00", guests: 3, status: "pendiente",  phone: "+34 645 678 901" },
+  { id: 5, name: "Laura Sánchez",  time: "14:30", guests: 2, status: "confirmada", phone: "+34 656 789 012" },
+  { id: 6, name: "Diego Fernández",time: "20:00", guests: 5, status: "pendiente",  phone: "+34 667 890 123" },
+  { id: 7, name: "Sofía Morales",  time: "20:30", guests: 2, status: "confirmada", phone: "+34 678 901 234" },
 ];
 
 const ACTIVIDAD = [
@@ -91,7 +91,7 @@ export default function EmpresaDashboardPage() {
       <div>
         <h2 className="text-2xl font-bold text-foreground">Dashboard</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          {new Date().toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+          {new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
         </p>
       </div>
 
@@ -127,7 +127,7 @@ export default function EmpresaDashboardPage() {
               <p className="text-xs text-muted-foreground mt-0.5">{RESERVAS_HOY.length} reservas · {pendientes} pendientes</p>
             </div>
             <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5">
-              {new Date().toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit" })}
+              {new Date().toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit" })}
             </Badge>
           </div>
 

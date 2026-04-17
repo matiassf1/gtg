@@ -31,7 +31,7 @@ export default async function SplashPage() {
 
       {/* Indicador sutil de que es clickeable */}
       <p className="mt-10 text-xs text-muted-foreground/50 tracking-widest uppercase z-10 animate-pulse">
-        Tocá para entrar
+        Toca para entrar
       </p>
     </main>
   );

@@ -22,7 +22,7 @@ interface ReviewClient {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function fmtDate(iso: string) {
-  return new Intl.DateTimeFormat("es-AR", {
+  return new Intl.DateTimeFormat("es-ES", {
     day: "numeric", month: "long", year: "numeric",
   }).format(new Date(iso));
 }

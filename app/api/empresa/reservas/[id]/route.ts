@@ -61,7 +61,7 @@ export async function PATCH(
 
   // Notify client on confirmation or rejection
   if (status === "CONFIRMADA" || status === "RECHAZADA") {
-    const formattedDate = updated.date.toLocaleDateString("es-AR", {
+    const formattedDate = updated.date.toLocaleDateString("es-ES", {
       weekday: "long", day: "numeric", month: "long",
     });
 

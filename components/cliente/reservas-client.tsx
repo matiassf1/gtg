@@ -46,8 +46,8 @@ const STATUS_CONFIG = {
 function formatDateTime(iso: string) {
   const d = new Date(iso);
   return {
-    date: d.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" }),
-    time: d.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" }),
+    date: d.toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long", year: "numeric" }),
+    time: d.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" }),
   };
 }
 
@@ -202,7 +202,7 @@ function CancelModal({
             Cancelar reserva
           </DialogTitle>
           <DialogDescription>
-            ¿Estás seguro de que querés cancelar esta reserva? Esta acción no se puede deshacer.
+            ¿Estás seguro de que quieres cancelar esta reserva? Esta acción no se puede deshacer.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-2">
@@ -230,11 +230,11 @@ function EmptyState({ type }: { type: "proximas" | "historial" }) {
       </div>
       <div>
         <p className="font-semibold text-foreground">
-          {type === "proximas" ? "No tenés reservas próximas" : "Sin historial de reservas"}
+          {type === "proximas" ? "No tienes reservas próximas" : "Sin historial de reservas"}
         </p>
         <p className="text-sm text-muted-foreground mt-1">
           {type === "proximas"
-            ? "Explorá restaurantes y hacé tu primera reserva."
+            ? "Explora restaurantes y haz tu primera reserva."
             : "Las reservas pasadas aparecerán acá."}
         </p>
       </div>

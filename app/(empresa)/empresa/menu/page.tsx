@@ -25,7 +25,7 @@ export default async function MenuPage() {
         <h2 className="text-2xl font-bold text-foreground">Menú</h2>
         <p className="text-sm text-muted-foreground mt-1">
           {restaurant.menuItems.length === 0
-            ? "Todavía no tenés platos — agregá el primero"
+            ? "Todavía no tienes platos — añade el primero"
             : `${restaurant.menuItems.length} plato${restaurant.menuItems.length !== 1 ? "s" : ""} · arrastrá para reordenar`
           }
         </p>

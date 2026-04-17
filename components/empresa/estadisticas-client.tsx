@@ -29,11 +29,11 @@ const ratingPorMes = [
 ];
 
 const platosPopulares = [
-  { nombre: "Asado de tira",     pedidos: 143 },
-  { nombre: "Entraña c/ chimichurri", pedidos: 118 },
-  { nombre: "Empanadas (x6)",    pedidos: 97  },
-  { nombre: "Mollejas a la brasa",pedidos: 84  },
-  { nombre: "Milanesa napolitana",pedidos: 76  },
+  { nombre: "Chuletón de buey",   pedidos: 143 },
+  { nombre: "Croquetas de jamón", pedidos: 118 },
+  { nombre: "Tortilla de patata", pedidos: 97  },
+  { nombre: "Pulpo a la gallega", pedidos: 84  },
+  { nombre: "Patatas bravas",     pedidos: 76  },
 ];
 
 const clientesTipo = [
@@ -123,7 +123,7 @@ export function EstadisticasClient() {
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(0 0% 14.9%)" />
               <XAxis dataKey="mes" tick={{ fontSize: 11, fill: "hsl(0 0% 63.9%)" }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 11, fill: "hsl(0 0% 63.9%)" }} axisLine={false} tickLine={false} />
-              <Tooltip {...TooltipStyle} formatter={(v: number) => [v, "Reservas"]} />
+              <Tooltip {...TooltipStyle} formatter={(v: any) => [v ?? 0, "Reservas"]} />
               <Bar dataKey="reservas" fill="#39ff14" fillOpacity={0.85} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -136,7 +136,7 @@ export function EstadisticasClient() {
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(0 0% 14.9%)" />
               <XAxis dataKey="mes" tick={{ fontSize: 11, fill: "hsl(0 0% 63.9%)" }} axisLine={false} tickLine={false} />
               <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 11, fill: "hsl(0 0% 63.9%)" }} axisLine={false} tickLine={false} />
-              <Tooltip {...TooltipStyle} formatter={(v: number) => [v.toFixed(1), "Estrellas"]} />
+              <Tooltip {...TooltipStyle} formatter={(v: any) => [v?.toFixed(1) ?? "0.0", "Estrellas"]} />
               <Line
                 type="monotone"
                 dataKey="rating"
@@ -171,7 +171,7 @@ export function EstadisticasClient() {
                 axisLine={false}
                 tickLine={false}
               />
-              <Tooltip {...TooltipStyle} formatter={(v: number) => [v, "Pedidos"]} />
+              <Tooltip {...TooltipStyle} formatter={(v: any) => [v, "Pedidos"]} />
               <Bar dataKey="pedidos" fill="#39ff14" fillOpacity={0.85} radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -196,7 +196,7 @@ export function EstadisticasClient() {
               </Pie>
               <Tooltip
                 contentStyle={TooltipStyle.contentStyle}
-                formatter={(v: number, name: string) => [v, name]}
+                formatter={(v: any, name: any) => [v, name]}
               />
               <Legend
                 formatter={(value) => (
